@@ -108,12 +108,22 @@ const salesByWeek = [
 
 const outputElement = document.getElementById("carSales");
 
-outputElement.innerHTML += "<h1>Car Sales</h1>";
+outputElement.innerHTML = "<h1>Car Sales</h1>";
 
-salesByWeek.forEach(sale => {
-    outputElement.innerHTML += `<hr/><div><h1>${sale.sales_agent.first_name} ${sale.sales_agent.last_name}</h1></div>`;
-    for (const entry of Object.entries(sale.vehicle)) {
-        outputElement.innerHTML += `<div>${entry[0]}: ${entry[1]}</div>`
-    };
-    outputElement.innerHTML += `<div><h2>Profit: $${sale.gross_profit}</h2></div>`
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener('keypress', event => {
+    if (event.charCode === 13) {
+        outputElement.innerHTML = "<h1>Car Sales</h1>";
+        const searchTerm = event.target.value;
+        salesByWeek.forEach(sale => {
+            if (sale.sales_agent.first_name.includes(`${searchTerm}`) || sale.sales_agent.last_name.includes(`${searchTerm}`)) {
+                outputElement.innerHTML += `<hr/><div><h1>${sale.sales_agent.first_name} ${sale.sales_agent.last_name}</h1></div>`;
+                for (const entry of Object.entries(sale.vehicle)) {
+                    outputElement.innerHTML += `<div>${entry[0]}: ${entry[1]}</div>`
+                };
+                outputElement.innerHTML += `<div><h2>Profit: $${sale.gross_profit}</h2></div>`
+            }
+        });
+    }
 });
